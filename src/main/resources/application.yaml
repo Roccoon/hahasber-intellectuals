@@ -1,0 +1,118 @@
+intellectuals:
+  kafka:
+    consumer-enabled: ${kafka_consumer_enabled:false}
+server:
+  port: ${port}
+spring:
+  profiles:
+    active: ${kafka_server}
+  datasource:
+    password: ${db_password}
+    url: jdbc:postgresql://${db_host}:5432/${db_name}?useSSL=false&reWriteBatchedInserts=true
+    driver-class-name: org.postgresql.Driver
+    username: ${db_username}
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  jpa:
+    generate-ddl: true
+#    hibernate:
+#      naming:
+#        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        hbm2ddl:
+          auto: none
+        jdbc:
+          batch_size: 20
+          batch_versioned_data: true
+          lob:
+            non_contextual_creation: true
+        order_inserts: true
+        order_updates: true
+        proc:
+          param_null_passing: true
+  output:
+    ansi:
+      enabled: DETECT
+  servlet:
+    multipart:
+      max-file-size: 700MB
+      max-request-size: 700MB
+  kafka:
+    bootstrap-servers: ${kafka_bootstrap_servers:localhost:9092}
+    properties:
+      jaas:
+        enabled: true
+      sasl:
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username=admin password=admin-secret;
+        mechanism: PLAIN
+        protocol: SASL_PLAINTEXT
+      security:
+        protocol: SASL_PLAINTEXT
+      session:
+        timeout:
+          ms: 600000
+      request:
+        timeout:
+          ms: 610000
+      max:
+        poll:
+          interval:
+            ms: 18000000
+        partition:
+          fetch:
+            bytes: 1000000000
+    consumer:
+      group-id: intellectuals.cosumer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      max-poll-records: 1
+      fetch-max-wait: 36000
+      enable-auto-commit: false
+    producer:
+      properties:
+        max:
+          request:
+            size: 1000000000
+      client-id: intellectuals
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      retries: 2
+      buffer-memory: 1000000000
+#      compression-type: gzip
+    listener:
+      poll-timeout: 1800000
+      concurrency: 1
+      ack-mode: manual_immediate
+
+
+
+
+---
+
+# Для подклчения к кафке tafs:
+#--db_host=***.***.***.*** --port=3031 --db_name=dbname --db_username=name --db_password=pass --kafka_server=kafka
+#--kafka_bootstrap_servers=***.***.***.***:9092
+
+spring:
+  profiles: kafka
+  kafka:
+    bootstrap-servers: ${kafka_bootstrap_servers:localhost:9092}
+    properties:
+      sasl:
+        jaas:
+          config: org.apache.kafka.common.security.plain.PlainLoginModule required username=admin password=admin-secret;
+        mechanism: PLAIN
+        protocol: SASL_PLAINTEXT
+      security:
+        protocol: SASL_PLAINTEXT
+    jaas:
+      enabled: true
+
+tafs:
+  kafka:
+    enabled: false
