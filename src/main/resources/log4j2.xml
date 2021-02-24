@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <!-- Logging Properties -->
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n</Property>
+        <Property name="APP_LOG_ROOT">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout
+                    pattern="%highlight{%d{HH:mm:ss.SSS} %-5level %logger{36}.%M() @%L - %msg%n}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=green}"/>
+        </Console>
+
+        <RollingFile name="Performance" fileName="${APP_LOG_ROOT}/perf.log"
+                     filePattern="${APP_LOG_ROOT}/perf-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="Common" fileName="${APP_LOG_ROOT}/app.log"
+                     filePattern="${APP_LOG_ROOT}/app-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="Errors" fileName="${APP_LOG_ROOT}/errors.log"
+                     filePattern="${APP_LOG_ROOT}/errors-%d{yyyy-MM-dd}-%i.log">
+            <LevelRangeFilter minLevel="FATAL" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="19500KB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+    </Appenders>
+    <Loggers>
+        <Logger name="org.hibernate.validator.internal.util.Version" level="info"/>
+        <Logger name="org.hibernate.SQL" level="info"/>
+        <Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="info"/>
+        <Logger name="org.hibernate.type" level="info"/>
+        <logger name="org.springframework" level="info"/>
+        <logger name="org.hibernate" level="info"/>
+        <logger name="PerfLog" level="info"/>
+        <logger name="org.springframework.kafka" level="info"/>
+        <logger name="org.apache.kafka" level="info"/>
+        <logger name="org.apache.commons" level="info"/>
+        <logger name="org.springframework.kafka.listener.KafkaMessageListenerContainer$ListenerConsumer" level="info"/>
+        <logger name="com.zaxxer.hikari.pool.HikariPool" level="info"/>
+        <Logger name="PerfLog" level="DEBUG" additivity="info">
+            <AppenderRef ref="Performance"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Root level="DEBUG" additivity="false">
+            <AppenderRef ref="Common"/>
+            <AppenderRef ref="Errors"/>
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

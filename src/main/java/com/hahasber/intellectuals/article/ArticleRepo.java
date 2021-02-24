@@ -1,6 +1,5 @@
-package com.hahasber.intellectuals.dao;
+package com.hahasber.intellectuals.article;
 
-import com.hahasber.intellectuals.entities.ArticleEntity;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

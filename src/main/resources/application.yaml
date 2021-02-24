@@ -94,7 +94,6 @@ spring:
 
 ---
 
-# Для подклчения к кафке tafs:
 #--db_host=***.***.***.*** --port=3031 --db_name=dbname --db_username=name --db_password=pass --kafka_server=kafka
 #--kafka_bootstrap_servers=***.***.***.***:9092
 
