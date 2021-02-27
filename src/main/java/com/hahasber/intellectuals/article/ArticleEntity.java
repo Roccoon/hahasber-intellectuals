@@ -1,36 +1,43 @@
 package com.hahasber.intellectuals.article;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hahasber.intellectuals.user.User;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
-@Entity(name = "article")
-@Data
-public class ArticleEntity implements  Cloneable{
+@Entity
+@Table(name = "article")
+@Getter
+@Setter
+@NoArgsConstructor
+public class ArticleEntity {
 
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private UUID id;
+    @JsonIgnore
     @Column(name = "active")
     private Boolean active;
+    @JsonIgnore
     @Column(name = "active_start_time")
     private LocalDateTime activeStartTime;
+    @JsonIgnore
     @Column(name = "active_end_time")
     private LocalDateTime activeEndTime;
     @Column(name = "article_text")
     private String articleText;
     @Column(name = "author")
     private String author;
+    @JsonIgnore
     @Column(name = "import_time")
     private LocalDateTime importTime;
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JsonIgnore
-    private User user;
 
     public void deactivate(LocalDateTime time) {
         this.activeEndTime = time;
@@ -38,7 +45,7 @@ public class ArticleEntity implements  Cloneable{
     }
 
     public void activate(LocalDateTime time) {
-        this.activeEndTime = LocalDateTime.MAX;
+        this.activeEndTime = LocalDateTime.of( LocalDate.of(10000,1,1),LocalTime.of(1,1,1,1));
         this.activeStartTime = time;
         this.active = true;
         this.importTime = time;
