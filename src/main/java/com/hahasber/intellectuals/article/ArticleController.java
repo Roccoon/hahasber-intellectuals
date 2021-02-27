@@ -31,8 +31,6 @@ public class ArticleController {
         this.articleSrv = articleSrv;
     }
 
-    @RequestMapping("/api/articles")
-
     @GetMapping()
     public List<ArticleEntity> getAllArticles() {
         return articleSrv.getArticles();
@@ -63,7 +61,7 @@ public class ArticleController {
         entity.setId(id);
         return articleSrv.uploadArticle(entity);
     }
-    
+
     @PostMapping("/test")
     public ArticleEntity createTestArticles() {
         ArticleEntity entity=new ArticleEntity();

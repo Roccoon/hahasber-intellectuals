@@ -31,6 +31,8 @@ public class ArticleEntity {
     @JsonIgnore
     @Column(name = "active_end_time")
     private LocalDateTime activeEndTime;
+    @Column(name = "name")
+    private String name;
     @Column(name = "article_text")
     private String articleText;
     @Column(name = "author")
