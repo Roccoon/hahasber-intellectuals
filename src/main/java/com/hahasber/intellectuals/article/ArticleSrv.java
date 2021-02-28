@@ -2,15 +2,18 @@ package com.hahasber.intellectuals.article;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ArticleSrv {
 
-    @Autowired
-    private  ArticleRepo articleRepo;
+    private final ArticleRepo articleRepo;
+
+    public ArticleSrv(ArticleRepo articleRepo) {
+        this.articleRepo = articleRepo;
+    }
 
 
     public List<ArticleEntity> getArticles() {
@@ -19,6 +22,11 @@ public class ArticleSrv {
 
     public ArticleEntity getArticles(UUID id) {
         return articleRepo.findById(id).get();
+    }
+
+    public List<ArticleEntity> getArticles(Set<String> tags) {
+
+        return articleRepo.findByTags(tags);
     }
 
     public void deleteById(UUID id) {
@@ -33,11 +41,10 @@ public class ArticleSrv {
     }
 
     public ArticleEntity uploadArticle(ArticleEntity entity) {
-        LocalDateTime importTime=LocalDateTime.now();
-//        ArticleEntity oldEntity=articleRepo.findById(entity.getId()).get();
+        LocalDateTime importTime = LocalDateTime.now();
+//        ArticleEntity oldEntity=articleRepo.findById(entity.getId()).get(); todo
 //
         entity.activate(importTime);
-//        oldEntity.
         articleRepo.save(entity);
         return entity;
     }

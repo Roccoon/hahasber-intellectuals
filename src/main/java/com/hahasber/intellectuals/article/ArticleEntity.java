@@ -4,12 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Set;
 import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import javax.persistence.*;
 
 @Entity
 @Table(name = "article")
@@ -40,6 +46,9 @@ public class ArticleEntity {
     @JsonIgnore
     @Column(name = "import_time")
     private LocalDateTime importTime;
+
+    @OneToMany(mappedBy="article")
+    private Set<TagEntity> tags;
 
     public void deactivate(LocalDateTime time) {
         this.activeEndTime = time;

@@ -1,16 +1,11 @@
-package com.hahasber.intellectuals.article;
+package com.hahasber.intellectuals.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import com.hahasber.intellectuals.exception.ArticleEntityNotFoundException;
-import java.net.URI;
+import com.hahasber.intellectuals.article.ArticleEntity;
+import com.hahasber.intellectuals.article.ArticleSrv;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +31,11 @@ public class ArticleController {
         return articleSrv.getArticles();
     }
 
+    @GetMapping("/tags")
+    public List<ArticleEntity> getAllArticlesByTags(@RequestBody Set<String> tags) {
+        return articleSrv.getArticles(tags);
+    }
+
     @GetMapping("/{id}")
     public ArticleEntity getArticles(@PathVariable UUID id) {
         return articleSrv.getArticles(id);
@@ -43,7 +43,7 @@ public class ArticleController {
 
     @DeleteMapping("/{id}")
     public void deleteArticles(@PathVariable UUID id) {
-         articleSrv.deleteById(id);
+        articleSrv.deleteById(id);
     }
 
     @PostMapping()
@@ -57,14 +57,14 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public ArticleEntity uploadArticle(@PathVariable UUID id,@RequestBody ArticleEntity entity) {
+    public ArticleEntity uploadArticle(@PathVariable UUID id, @RequestBody ArticleEntity entity) {
         entity.setId(id);
         return articleSrv.uploadArticle(entity);
     }
 
     @PostMapping("/test")
     public ArticleEntity createTestArticles() {
-        ArticleEntity entity=new ArticleEntity();
+        ArticleEntity entity = new ArticleEntity();
         entity.setAuthor("tester");
         entity.setArticleText("test text");
         return articleSrv.createArticle(entity);
