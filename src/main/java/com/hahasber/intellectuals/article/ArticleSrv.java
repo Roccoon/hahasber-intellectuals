@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 public class ArticleSrv {
 
     private final ArticleRepo articleRepo;
+    private final TagsRepo tagsRepo;
 
-    public ArticleSrv(ArticleRepo articleRepo) {
+    public ArticleSrv(ArticleRepo articleRepo, TagsRepo tagsRepo) {
         this.articleRepo = articleRepo;
+        this.tagsRepo = tagsRepo;
     }
 
 
@@ -37,13 +39,15 @@ public class ArticleSrv {
 
         entity.activate(LocalDateTime.now());
         articleRepo.save(entity);
+        Set<TagEntity> tags=entity.getTags();
+        tags.forEach(f->f.setArticle(entity));
+        tagsRepo.saveAll(tags);
         return entity;
     }
 
     public ArticleEntity uploadArticle(ArticleEntity entity) {
         LocalDateTime importTime = LocalDateTime.now();
 //        ArticleEntity oldEntity=articleRepo.findById(entity.getId()).get(); todo
-//
         entity.activate(importTime);
         articleRepo.save(entity);
         return entity;

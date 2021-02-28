@@ -2,6 +2,8 @@ package com.hahasber.intellectuals.controller;
 
 import com.hahasber.intellectuals.article.ArticleEntity;
 import com.hahasber.intellectuals.article.ArticleSrv;
+import com.hahasber.intellectuals.article.TagEntity;
+import com.hahasber.intellectuals.article.TagSrv;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -20,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/articles")
 public class ArticleController {
 
+    private final TagSrv tagSrv;
     private final ArticleSrv articleSrv;
 
-    public ArticleController(ArticleSrv articleSrv) {
+    public ArticleController(ArticleSrv articleSrv, TagSrv tagSrv) {
         this.articleSrv = articleSrv;
+        this.tagSrv = tagSrv;
     }
 
     @GetMapping()
@@ -62,11 +66,8 @@ public class ArticleController {
         return articleSrv.uploadArticle(entity);
     }
 
-    @PostMapping("/test")
-    public ArticleEntity createTestArticles() {
-        ArticleEntity entity = new ArticleEntity();
-        entity.setAuthor("tester");
-        entity.setArticleText("test text");
-        return articleSrv.createArticle(entity);
+    @GetMapping("/suggestTags")
+    public Set<TagEntity> getTags(@RequestBody ArticleEntity entity) {
+        return tagSrv.suggestTags(entity);
     }
 }
